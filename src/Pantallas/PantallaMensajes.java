@@ -6,27 +6,35 @@ import java.awt.Insets;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-public class PantallaMensajes extends JFrame{
+public class PantallaMensajes extends JFrame {
 
-    public PantallaMensajes(){
+    private JTextArea txtMensajes;
+    private JTextField txtMensaje;
+    private String usuario;
+
+    public PantallaMensajes(String usuario) {
+        this.usuario = usuario;
         this.inicializar();
     }
 
-    private void inicializar(){
-        setTitle("Mensajería segura usando RSA");
+    private void inicializar() {
+        setTitle("Mensajería segura usando RSA - Usuario: " + usuario);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setSize(500, 350);
+        setSize(600, 400); // Aumenté el tamaño para mejor visualización
         setLocationRelativeTo(null);
         setLayout(new GridBagLayout());
-        
+
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 10, 10);
-        
-        JLabel lblTitulo = new JLabel("Mensajería segura usando RSA");
+
+        JLabel lblTitulo = new JLabel("Mensajería segura usando RSA - " + usuario);
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.gridwidth = 3;
@@ -41,11 +49,13 @@ public class PantallaMensajes extends JFrame{
         add(lblClaves, gbc);
 
         JTextArea txtClaves = new JTextArea(8, 15);
+        txtClaves.setEditable(false);
         JScrollPane scrollClaves = new JScrollPane(txtClaves);
         gbc.gridy = 2;
         add(scrollClaves, gbc);
 
-        JTextArea txtMensajes = new JTextArea(10, 25);
+        txtMensajes = new JTextArea(10, 25);
+        txtMensajes.setEditable(false);
         JScrollPane scrollMensajes = new JScrollPane(txtMensajes);
         gbc.gridx = 1;
         gbc.gridy = 1;
@@ -61,18 +71,29 @@ public class PantallaMensajes extends JFrame{
         gbc.anchor = GridBagConstraints.WEST;
         add(new JLabel("Enviar mensaje a:"), gbc);
 
-        JTextField txtMensaje = new JTextField(20);
+        txtMensaje = new JTextField(20);
         gbc.gridx = 1;
         gbc.gridwidth = 2;
         add(txtMensaje, gbc);
 
         JButton btnSend = new JButton("Send");
-        gbc.gridy = 5;
+        gbc.gridy = 4;
         gbc.gridx = 1;
         gbc.gridwidth = 1;
+
+        btnSend.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String mensaje = txtMensaje.getText();
+                if (!mensaje.isEmpty()) {
+                    txtMensajes.append(usuario + ": " + mensaje + "\n");
+                    txtMensaje.setText("");
+                }
+            }
+        });
+
         add(btnSend, gbc);
 
         setVisible(true);
     }
-    
 }
