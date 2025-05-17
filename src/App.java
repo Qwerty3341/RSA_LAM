@@ -1,6 +1,4 @@
 import javax.swing.SwingUtilities;
-
-import Pantallas.PantallaMensajes;
 import Pantallas.PantallaUsuario;
 
 public class App {

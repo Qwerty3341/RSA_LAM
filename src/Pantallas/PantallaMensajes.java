@@ -10,24 +10,41 @@ import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import RSA.RSA;
+import Servidor.Mensajeria;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.security.NoSuchAlgorithmException;
 
 public class PantallaMensajes extends JFrame {
 
     private JTextArea txtMensajes;
     private JTextField txtMensaje;
-    private String usuario;
 
-    public PantallaMensajes(String usuario) {
+    private String usuario;
+    private RSA rsa;
+
+    public PantallaMensajes(String usuario) throws NoSuchAlgorithmException {
         this.usuario = usuario;
+        this.rsa = new RSA();
+        Mensajeria.getInstanciaDelServidor().registrarUsuario(this);
         this.inicializar();
+    }
+
+    public void recibirMensaje(String mensajeCifrado, String remitente){
+        try {
+            String mensajeDescifrado = rsa.decrypt(mensajeCifrado);
+            txtMensajes.append("Mensaje por: "+ remitente + "\n\t" + mensajeDescifrado);
+        } catch (Exception error) {
+            JOptionPane.showMessageDialog(this, "ERROR:" + error);
+        }
     }
 
     private void inicializar() {
         setTitle("Mensajería segura usando RSA - Usuario: " + usuario);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setSize(600, 400); // Aumenté el tamaño para mejor visualización
+        setSize(600, 400);
         setLocationRelativeTo(null);
         setLayout(new GridBagLayout());
 
@@ -81,19 +98,27 @@ public class PantallaMensajes extends JFrame {
         gbc.gridx = 1;
         gbc.gridwidth = 1;
 
-        btnSend.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
+        btnSend.addActionListener(e -> {
                 String mensaje = txtMensaje.getText();
                 if (!mensaje.isEmpty()) {
-                    txtMensajes.append(usuario + ": " + mensaje + "\n");
-                    txtMensaje.setText("");
+                    try {
+                        
+                        String mensajeCifrado = rsa.encrypt(mensaje);
+                        Mensajeria.getInstanciaDelServidor().broadcastMensaje(mensajeCifrado, usuario);
+                        txtMensajes.append("Tú: " + mensaje + "\n");
+                        txtMensaje.setText("");
+                    } catch (Exception ex) {
+                        JOptionPane.showMessageDialog(this, "Error al cifrar: " + ex.getMessage());
+                    }
                 }
-            }
-        });
+            });
 
         add(btnSend, gbc);
 
         setVisible(true);
+    }
+
+    public String getUsuario() {
+        return usuario;
     }
 }

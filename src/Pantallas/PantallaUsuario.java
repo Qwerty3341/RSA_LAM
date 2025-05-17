@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.security.NoSuchAlgorithmException;
 
 public class PantallaUsuario extends JFrame {
 
@@ -46,7 +47,13 @@ public class PantallaUsuario extends JFrame {
 
                     // Abrir pantalla de mensajes
                     SwingUtilities.invokeLater(() -> {
-                        PantallaMensajes pantallaMensajes = new PantallaMensajes(usuario);
+                        PantallaMensajes pantallaMensajes = null;
+                        try {
+                            pantallaMensajes = new PantallaMensajes(usuario);
+                        } catch (NoSuchAlgorithmException e1) {
+                            // TODO Auto-generated catch block
+                            e1.printStackTrace();
+                        }
                         pantallaMensajes.setVisible(true);
                     });
                 } else {
