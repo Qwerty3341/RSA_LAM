@@ -6,12 +6,12 @@ import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
 
-public class SecureRSA {
+public class RSA {
     private static final int KEY_SIZE = 2048;
     private PrivateKey privateKey;
     private PublicKey publicKey;
 
-    public SecureRSA() throws NoSuchAlgorithmException {
+    public RSA() throws NoSuchAlgorithmException {
         KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA");
         keyGen.initialize(KEY_SIZE);
         KeyPair pair = keyGen.generateKeyPair();
