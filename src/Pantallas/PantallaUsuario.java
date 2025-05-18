@@ -15,60 +15,48 @@ public class PantallaUsuario extends JFrame {
     }
 
     private void inicializar() {
-        setTitle("Sistema de mensajería segura con RSA");
-        setSize(500, 200);
+        setTitle("RSA - Sistema de Mensajería Segura con RSA");
+        setSize(400, 150);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
+        setLayout(new BorderLayout());
 
-        JPanel mainPanel = new JPanel(new BorderLayout(10, 10));
-        mainPanel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
+        // Panel principal
+        JPanel mainPanel = new JPanel(new BorderLayout());
+        mainPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
-        JLabel titulo = new JLabel("RSA - Sistema de Mensajería segura con RSA", SwingConstants.CENTER);
+        // Título
+        JLabel titulo = new JLabel("Sistema de Mensajería Segura con RSA", SwingConstants.CENTER);
         mainPanel.add(titulo, BorderLayout.NORTH);
 
-        JPanel userPanel = new JPanel(new BorderLayout(5, 5));
-        userPanel.setBorder(BorderFactory.createTitledBorder("Usuario:"));
-
-        userField = new JTextField();
-        userField.setPreferredSize(new Dimension(200, 30));
-        userPanel.add(userField, BorderLayout.CENTER);
-
+        // Panel de entrada de usuario
+        JPanel inputPanel = new JPanel(new FlowLayout());
+        inputPanel.add(new JLabel("Usuario:"));
+        
+        userField = new JTextField(15);
+        inputPanel.add(userField);
+        
         JButton enterButton = new JButton("Enter");
-        enterButton.setPreferredSize(new Dimension(80, 30));
-
-        // Agregar ActionListener al botón
-        enterButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String usuario = userField.getText().trim();
-                if (!usuario.isEmpty()) {
-                    // Cerrar esta pantalla
-                    dispose();
-
-                    // Abrir pantalla de mensajes
-                    SwingUtilities.invokeLater(() -> {
-                        PantallaMensajes pantallaMensajes = null;
-                        try {
-                            pantallaMensajes = new PantallaMensajes(usuario);
-                        } catch (NoSuchAlgorithmException e1) {
-                            // TODO Auto-generated catch block
-                            e1.printStackTrace();
-                        }
-                        pantallaMensajes.setVisible(true);
-                    });
-                } else {
-                    JOptionPane.showMessageDialog(PantallaUsuario.this,
-                            "Por favor ingrese un nombre de usuario",
-                            "Error",
-                            JOptionPane.WARNING_MESSAGE);
+        enterButton.addActionListener(e -> {
+            String usuario = userField.getText().trim();
+            if (!usuario.isEmpty()) {
+                dispose();
+                try {
+                    new PantallaMensajes(usuario).setVisible(true);
+                } catch (NoSuchAlgorithmException ex) {
+                    JOptionPane.showMessageDialog(null, "Error al inicializar RSA: " + ex.getMessage());
                 }
+            } else {
+                JOptionPane.showMessageDialog(this, 
+                    "Por favor ingrese un nombre de usuario", 
+                    "Error", 
+                    JOptionPane.WARNING_MESSAGE);
             }
         });
+        inputPanel.add(enterButton);
 
-        userPanel.add(enterButton, BorderLayout.EAST);
-        mainPanel.add(userPanel, BorderLayout.CENTER);
-
-        this.add(mainPanel);
-        this.setVisible(true);
+        mainPanel.add(inputPanel, BorderLayout.CENTER);
+        add(mainPanel);
+        setVisible(true);
     }
 }
