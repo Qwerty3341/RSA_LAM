@@ -15,8 +15,8 @@ public class PantallaUsuario extends JFrame {
     }
 
     private void inicializar() {
-        setTitle("Sistema de mensajería segura con RSA");
-        setSize(500, 200);
+        setTitle("Mensajería con RSA");
+        setSize(300, 150);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
